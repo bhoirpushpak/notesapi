@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NoteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,7 +14,10 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::fallback(function(){
+    return response()->json(['message' => 'Not Found.'], 404);
 });
+
+Route::resource('/notes',NoteController::class);
+//Route::put('/notes/update/{id}',[NoteController::class,'update']);
+//Route::delete('/notes/delete/{id}',[NoteController::class,'delete']);
