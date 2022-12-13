@@ -8,6 +8,7 @@ Run following commands
     <li>php artisan serve</li>
 </ol>
 
-If you encounter error during mongodb installation  copy the dll from the public/data folder and paste it into 
+**If you encounter error during mongodb installation**  
+copy the dll from the public/data folder and paste it into 
 php installaton dir php/ext<br>
 open php.ini and add extension=php_mongodb.dll
