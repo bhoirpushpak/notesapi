@@ -35,7 +35,7 @@ class NoteController extends Controller
      */
     public function create()
     {
-        $notes =  Note::orderBy('_id', 'desc')->paginate(30);
+        $notes =  Note::orderBy('_id', 'desc')->get();
 
         if($notes->isEmpty()){
             return response()->json(['status'=>false,'message'=>'No notes available']);
