@@ -8,6 +8,16 @@ use Illuminate\Support\Facades\Validator;
 
 class NoteController extends Controller
 {
+    public function create_slug($string){
+        $slug=  preg_replace('/[^A-Za-z0-9-]+/', '-', strtolower($string));
+        $note = Note::where('note_title','=',$string)->count();
+        if($note == 0){
+            return $slug;
+        }else{
+            return $slug.'-'.$note;
+        }
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +35,7 @@ class NoteController extends Controller
      */
     public function create()
     {
-        $notes =  Note::orderBy('_id', 'desc')->paginate(30);
+        $notes =  Note::orderBy('_id', 'desc')->get();
 
         if($notes->isEmpty()){
             return response()->json(['status'=>false,'message'=>'No notes available']);
@@ -46,10 +56,10 @@ class NoteController extends Controller
             'note_title' => 'required|max:255',
             'note_content' => 'required',
         ]);
-
         $note = new Note();
         $note->note_title = $request->note_title;
         $note->note_content = $request->note_content;
+        $note->note_slug = $this->create_slug($request->note_title);
         if($note->save()){
             return response()->json(['status'=>true,'response'=>$note]);
         }else{
@@ -66,13 +76,15 @@ class NoteController extends Controller
      */
     public function show($note)
     {
-        $notes =  Note::find($note);
+
+        $notes =  Note::where('note_slug',$note)->first();
 
         if(empty($notes)){
             return response()->json(['status'=>false,'message'=>'Note not found']);
         }
 
         return response()->json(['status'=>true,'response'=>$notes]);
+
     }
 
     /**
@@ -81,9 +93,15 @@ class NoteController extends Controller
      * @param  \App\Models\Note  $note
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Note $note)
+    public function edit($note)
     {
+        $notes =  Note::find($note);
 
+        if(empty($notes)){
+            return response()->json(['status'=>false,'message'=>'Note not found']);
+        }
+
+        return response()->json(['status'=>true,'response'=>$notes]);
     }
 
     /**
@@ -106,6 +124,7 @@ class NoteController extends Controller
         }
         $note->note_title = $request->note_title;
         $note->note_content = $request->note_content;
+        $note->note_slug = $this->create_slug($request->note_title);
         if($note->save()){
             return response()->json(['status'=>true,'response'=>$note]);
         }else{
