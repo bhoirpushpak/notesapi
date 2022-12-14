@@ -1,6 +1,8 @@
-#How to get started
-
+**How to get started with NotesAPI**
+-
+****
 **Prerequisites**
+-
 1. Install MongoDB driver (Discard this step if you have it already installed)r
 2. Install Compose
 3. Copy .env.example to .env
